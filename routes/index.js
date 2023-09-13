@@ -30,11 +30,10 @@ userRouter.get('/api/:user_id', async (req, res) => {
                 });
             }
             res.status(200).json(user);
-        }
-        else {
+        } else {
             res.send("Invalid parameter type")
         }
-       
+
     } catch (error) {
         res.status(400).json({
             error: error.message
@@ -81,39 +80,6 @@ userRouter.delete('/api/:user_id', async (req, res) => {
         res.status(204).json({
             success: true,
             message: "User Deleted Successfully"
-        });
-    } catch (error) {
-        res.status(400).json({
-            error: error.message
-        });
-    }
-})
-
-userRouter.get('/api/:name', (req, res) => {
-    try {
-        const name = req.params.name
-        const user = UserModel.find({
-            name: name
-        })
-        res.status(200).json(user)
-    } catch (error) {
-        res.status(400).json({
-            error: error.message
-        });
-    }
-
-})
-
-userRouter.post('/api/:name', async (req, res) => {
-    try {
-        const newUser = new UserModel({
-            name: req.params.name
-        });
-        const savedUser = await newUser.save();
-        res.status(201).json({
-            savedUser,
-            success: true,
-            message: "User created successfully"
         });
     } catch (error) {
         res.status(400).json({
