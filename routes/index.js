@@ -2,6 +2,10 @@ const express = require('express')
 const UserModel = require('../schema/UserSchema')
 const userRouter = express.Router()
 
+
+// @route   POST api/persons
+// @desc    Create a person
+// @access  Public
 userRouter.post('/api', async (req, res) => {
     try {
         const newUser = new UserModel(req.body);
@@ -18,6 +22,9 @@ userRouter.post('/api', async (req, res) => {
     }
 })
 
+// @route   GET api/persons
+// @desc    Get all persons
+// @access  Public
 userRouter.get('/api/:user_id', async (req, res) => {
     try {
         if (typeof req.params.user_id == Number) {
@@ -41,6 +48,10 @@ userRouter.get('/api/:user_id', async (req, res) => {
     }
 })
 
+
+// @route   PUT api/persons
+// @desc    Update a person
+// @access  Public
 userRouter.put('/api/:user_id', async (req, res) => {
     try {
         const updatedUser = await UserModel.findOneAndUpdate({
@@ -66,6 +77,10 @@ userRouter.put('/api/:user_id', async (req, res) => {
     }
 })
 
+
+// @route   DELETE api/persons
+// @desc    Delete a person
+// @access  Public
 userRouter.delete('/api/:user_id', async (req, res) => {
     try {
         const deletedUser = await UserModel.findOneAndDelete({
