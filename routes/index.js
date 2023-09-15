@@ -23,11 +23,12 @@ userRouter.post('/api', async (req, res) => {
 })
 
 // @route   GET api/persons
-// @desc    Get all persons
+// @desc    Get a person
 // @access  Public
 userRouter.get('/api/:user_id', async (req, res) => {
     try {
-        if (typeof req.params.user_id == Number) {
+        const userId = parseInt(req.params.user_id);
+        if (!isNaN(userId)) {
             const user = await UserModel.find({
                 userID: parseInt(req.params.user_id)
             }).exec();
@@ -54,22 +55,30 @@ userRouter.get('/api/:user_id', async (req, res) => {
 // @access  Public
 userRouter.put('/api/:user_id', async (req, res) => {
     try {
-        const updatedUser = await UserModel.findOneAndUpdate({
-            userID: parseInt(req.params.user_id)
-        }, req.body, {
-            new: true,
-            runValidators: true,
-        });
-        if (!updatedUser) {
-            return res.status(404).json({
-                error: 'User not found'
+        const userId = parseInt(req.params.user_id);
+        if (!isNaN(userId)) {
+            const updatedUser = await UserModel.findOneAndUpdate({
+                userID: parseInt(req.params.user_id)
+            }, req.body, {
+                new: true,
+                runValidators: true,
             });
+
+
+            if (!updatedUser) {
+                return res.status(404).json({
+                    error: 'User not found'
+                });
+            }
+            res.status(200).json({
+                updatedUser,
+                success: true,
+                message: "User updated successfully"
+            });
+        } else {
+            res.send("Invalid parameter type")
         }
-        res.status(200).json({
-            updatedUser,
-            success: true,
-            message: "User updated successfully"
-        });
+
     } catch (error) {
         res.status(400).json({
             error: error.message
@@ -83,19 +92,23 @@ userRouter.put('/api/:user_id', async (req, res) => {
 // @access  Public
 userRouter.delete('/api/:user_id', async (req, res) => {
     try {
-        const deletedUser = await UserModel.findOneAndDelete({
-            userID: parseInt(req.params.user_id)
-        });
-        console.log(deletedUser)
-        if (!deletedUser) {
-            return res.status(404).json({
-                error: 'User not found'
+        const userId = parseInt(req.params.user_id);
+        if (!isNaN(userId)) {
+            const deletedUser = await UserModel.findOneAndDelete({
+                userID: parseInt(req.params.user_id)
             });
+            if (!deletedUser) {
+                return res.status(404).json({
+                    error: 'User not found'
+                });
+            }
+            res.status(204).json({
+                success: true,
+                message: "User Deleted Successfully"
+            });
+        } else {
+            res.send("Invalid parameter type")
         }
-        res.status(204).json({
-            success: true,
-            message: "User Deleted Successfully"
-        });
     } catch (error) {
         res.status(400).json({
             error: error.message

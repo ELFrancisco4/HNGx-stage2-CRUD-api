@@ -1,16 +1,11 @@
-const express = require('express')
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const userRouter = require('./routes');
-const app = express()
-
+const server = require('./server')
 dotenv.config();
+
 const connectToDb = () => {
-    mongoose.set("strictQuery", false);
     return mongoose
-        .connect(process.env.MONGO_URI, {
-            bufferCommands: false,
-        })
+        .connect(process.env.MONGO_URI, {bufferCommands: true})
         .then(() => {
             console.log("Connected to MongoDB");
         })
@@ -20,11 +15,8 @@ const connectToDb = () => {
         });
 };
 
-app.use(express.json());
-app.use(userRouter)
-
-
-app.listen(3000, async () => {
-    console.log(`Server is running on port 3000`);
+server.listen(3000, async () => {
+    console.log("Server is listening on port 3000")
     await connectToDb()
 })
+
